@@ -1,16 +1,12 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Course } from './entities/course.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateCourseDto } from './dto/update-course.dto/update-course.dto';
 import { CreateCourseDto } from './dto/create-course.dto/create-course.dto';
 import { Flavor } from './entities/flavor.entity';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto';
+import { Event } from 'src/events/entities/event.entity/event.entity';
 @Injectable()
 export class CoursesService {
   constructor(
@@ -18,6 +14,7 @@ export class CoursesService {
     private readonly courseRepository: Repository<Course>,
     @InjectRepository(Flavor)
     private readonly flavorRepository: Repository<Flavor>,
+    private readonly dataSource: DataSource,
   ) {}
   // private courses: Course[] = [
   //   {
@@ -92,6 +89,27 @@ export class CoursesService {
   async remove(id: string) {
     const course = await this.findOne(id);
     return this.courseRepository.remove(course);
+  }
+
+  async recommendCourse(course: Course) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      course.recommendation++;
+      const recommendEvent = new Event();
+      recommendEvent.name = 'recommended_course';
+      recommendEvent.type = 'course';
+      recommendEvent.payload = { courseId: course.id };
+      await queryRunner.manager.save(course);
+      await queryRunner.manager.save(recommendEvent);
+
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   private async preloadFlavorByName(name: string): Promise<Flavor> {

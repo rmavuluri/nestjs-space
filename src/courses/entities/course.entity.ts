@@ -17,6 +17,8 @@ export class Course {
 
   @Column()
   brand: string;
+  @Column({ default: 0 })
+  recommendation: number;
 
   @JoinTable() // 👈 Join the 2 tables - only the OWNER-side does this
   @ManyToMany(

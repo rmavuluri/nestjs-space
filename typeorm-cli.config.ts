@@ -1,3 +1,4 @@
+import { CourseRefactor1696211561178 } from 'src/migrations/1696211561178-CourseRefactor';
 import { DataSource } from 'typeorm';
 
 export default new DataSource({

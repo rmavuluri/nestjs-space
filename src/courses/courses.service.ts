@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Course } from './entities/course.entity';
 import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,7 @@ import { CreateCourseDto } from './dto/create-course.dto/create-course.dto';
 import { Flavor } from './entities/flavor.entity';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto';
 import { Event } from 'src/events/entities/event.entity/event.entity';
+import { COURSE_BRANDS } from './course.constants';
 @Injectable()
 export class CoursesService {
   constructor(
@@ -15,7 +16,10 @@ export class CoursesService {
     @InjectRepository(Flavor)
     private readonly flavorRepository: Repository<Flavor>,
     private readonly dataSource: DataSource,
-  ) {}
+    @Inject(COURSE_BRANDS) courseBrands: string[], //this is custom providers we can get it here but declared in courses module, we can use courseBrands in this service
+  ) {
+    console.log(courseBrands);
+  }
   // private courses: Course[] = [
   //   {
   //     id: 1,

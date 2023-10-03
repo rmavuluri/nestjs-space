@@ -8,7 +8,8 @@ import { Flavor } from './entities/flavor.entity';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto';
 import { Event } from 'src/events/entities/event.entity/event.entity';
 import { COURSE_BRANDS } from './course.constants';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService, ConfigType } from '@nestjs/config';
+import courseConfig from './config/course.config';
 @Injectable()
 export class CoursesService {
   constructor(
@@ -19,11 +20,18 @@ export class CoursesService {
     private readonly dataSource: DataSource,
     @Inject(COURSE_BRANDS) courseBrands: string[], //this is custom providers we can get it here but declared in courses module, we can use courseBrands in this service
     private readonly configService: ConfigService,
+    @Inject(courseConfig.KEY)
+    private coursesConfiguration: ConfigType<typeof courseConfig>,
   ) {
     console.log(courseBrands);
 
     const databaseHost = this.configService.get<string>('DATABASE_HOST');
+    const databaseHost_1 = this.configService.get('database.host', 'localhost'); //This is using app.config
+    const coursesConfig = this.configService.get('courses.foo');
     console.log(databaseHost);
+    console.log(databaseHost_1);
+    console.log(coursesConfig);
+    console.log(coursesConfiguration.foo);
   }
   // private courses: Course[] = [
   //   {

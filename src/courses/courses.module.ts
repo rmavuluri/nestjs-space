@@ -7,6 +7,7 @@ import { Flavor } from './entities/flavor.entity';
 import { Event } from 'src/events/entities/event.entity/event.entity';
 import { COURSE_BRANDS } from './course.constants';
 import { ConfigModule } from '@nestjs/config';
+import courseConfig from './config/course.config';
 
 //class MockCourseService(){}
 
@@ -22,7 +23,10 @@ import { ConfigModule } from '@nestjs/config';
 // }
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Course, Flavor, Event]), ConfigModule],
+  imports: [
+    TypeOrmModule.forFeature([Course, Flavor, Event]),
+    ConfigModule.forFeature(courseConfig),
+  ],
   controllers: [CoursesController],
   providers: [
     // {

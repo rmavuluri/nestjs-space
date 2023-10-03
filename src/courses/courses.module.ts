@@ -6,12 +6,33 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Flavor } from './entities/flavor.entity';
 import { Event } from 'src/events/entities/event.entity/event.entity';
 import { COURSE_BRANDS } from './course.constants';
+import { ConfigModule } from '@nestjs/config';
+
+//class MockCourseService(){}
+
+// class ConfigService(){}
+// class DevelopmentConfigService(){}
+// class ProdctionCOnfigService(){}
+
+// @Inject()
+// export class CourseBrandFactory(){
+//   create(){
+//     return ['Hello','Hi'];
+//   }
+// }
+
 @Module({
-  imports: [TypeOrmModule.forFeature([Course, Flavor, Event])],
+  imports: [TypeOrmModule.forFeature([Course, Flavor, Event]), ConfigModule],
   controllers: [CoursesController],
   providers: [
+    // {
+    //   provide: CoursesService, useValue: new MockCourseService()//if you want to another service when calling CoursesService, we have to do like this
+    // },
     CoursesService,
     { provide: COURSE_BRANDS, useValue: ['Hello', 'Hi'] }, // this is the custom provider and we can inject into any of the service
+    //{ provide: COURSE_BRANDS, useFactory: ['Hello', 'Hi'] },
+    //{ provide: ConfigService, useClass: process.env.NODE_ENV === 'development'? DevelopmentConfigService: ProdctionCOnfigService}
+    //{ provide: COURSE_BRANDS, useFactory: (brandFactory: CourseBrandFactory) => brandFactory.create(),inject: CourseBrandFactory},
   ],
   exports: [CoursesService],
 })

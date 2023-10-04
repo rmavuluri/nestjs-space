@@ -112,3 +112,10 @@ Nest is [MIT licensed](LICENSE).
   entities: [Course, Flavor],
   migrations: [CourseRefactor1696211561178, <<Newly created File Here>>],
   });
+
+- ExceptionFilters : Responsible for handling unhandled exceptions
+- Pipes : It handles two things, one is transformations and validations
+- Guards : Check Given request has some conditions
+- Interceptors: execute something before or after method execution ...etc
+
+Nest building blocks can be global,controller , method and param(this is only for pipes) scopes

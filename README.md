@@ -119,3 +119,11 @@ Nest is [MIT licensed](LICENSE).
 - Interceptors: execute something before or after method execution ...etc
 
 Nest building blocks can be global,controller , method and param(this is only for pipes) scopes
+
+- nest g interceptor common/interceptors/wrap-response
+- Interceptors
+  bind extra logic before or after method execution
+  transform the result returned from a method
+  transform the exception thrown from a method
+  extend basic method behavior
+  or even completely overriding a method - depending on a specific condition (for example: doing something like caching various responses)
